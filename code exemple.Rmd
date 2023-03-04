@@ -1,0 +1,25 @@
+# Charger les bibliothèques
+library(tidyverse)
+library(factoextra)
+library(fpc)
+
+# Charger les données
+
+mall_customers <- read_csv("C:/Users/Islem/AppData/Local/RStudio/Mall_Customers.csv")
+
+# Sélectionner les variables d'intérêt
+mall_data <- select(mall_customers, `Age`, `Annual Income (k$)`, `Spending Score (1-100)`)
+
+# Standardiser les variables
+mall_data_scaled <- scale(mall_data)
+
+# Effectuer l'analyse de clustering avec DBSCAN
+
+dbscan_res::dbscan(mall_data_scaled, eps = 0.5, minPts = 6)
+
+
+# Visualiser les clusters avec une PCA
+pca_data <- prcomp(mall_data_scaled)
+pca_cluster <- fviz_cluster(list(data = pca_data$x[,1:2], cluster = dbscan_res$cluster))
+# Afficher le résultat
+print(pca_cluster)
